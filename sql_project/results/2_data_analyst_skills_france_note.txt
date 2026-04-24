@@ -1,0 +1,1 @@
+in the chart, skills like R, GitHub and SAS don't appear but immediately follows with count = 4
