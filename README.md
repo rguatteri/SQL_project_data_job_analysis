@@ -61,7 +61,7 @@ Here's the breakdown of the available data analyst and business analyst job oppo
 - Specifically, there seems to be **51** and **27** job postings for **data analyst** roles in France and Canada, respectively;
 - Conversely, there seems to be just **3** job postings for **business analyst** roles both in France and Canada.
 
-Role-specific and location-specific insights were obtained by filtering for a single role and/or location in the WHERE clause. 
+> Role-specific and location-specific insights were obtained by filtering for a single role and/or location in the WHERE clause. The same goes for the queries below.
 
 > **N.B.** Removing the 'job_postings_fact.salary_year_avg IS NOT NULL' filter from the WHERE clause returns over **16800** such job postings (!).
 
@@ -108,13 +108,14 @@ Here's the breakdown of the most required skills from job postings with specifie
 - **SQL** is leading across all scenarios; 
 - **Python** closely follows;
 - **Tableau** is also highly sought after.
+
 Other skills like **Excel**, **PowerBI**, **SAS**, **Azure**, and **Spark** show varying degrees of demand.
 
 ![Required Skills](/sql_project/results/2_available_jobs_skills.png)
 *Bar charts visualizing the count of the 10 most required skills for the available data analyst and business analyst roles in France and Canada. Due to the limited amount of job postings for business analyst roles with specified salaries, only the four most required skills are showed.*
 
 ### 3. In-Demand Skills
-This query helped identify the five most frequently skills requested in job postings for data analyst and business analyst roles in France and Canada, **irrespective of whether the salary is specified**.
+This query helped identify the five most frequently requested skills in job postings for data analyst and business analyst roles in France and Canada, **irrespective of whether the salary is specified**.
 
 > **N.B.** Since this query does NOT focus on the salary, the 'job_postings_fact.salary_year_avg IS NOT NULL' filter is omitted from the WHERE clause.
 
@@ -141,38 +142,41 @@ ORDER BY
 LIMIT
     5;
 ```
-Here's the breakdown of the most demanded skills for data analysts in 2023
-- **SQL** and **Excel** remain fundamental, emphasizing the need for strong foundational skills in data processing and spreadsheet manipulation.
+Here's the breakdown of the most in-demand skills from job postings for data analyst and business analyst roles in France and Canada:
+- **SQL** and **Excel** remain fundamental, emphasizing the need for strong foundational skills in data processing and spreadsheet manipulation;
 - **Programming** and **Visualization Tools** like **Python**, **Tableau**, and **Power BI** are essential, pointing towards the increasing importance of technical skills in data storytelling and decision support.
 
-| Skills   | Demand Count |
-|----------|--------------|
-| SQL      | 7291         |
-| Excel    | 4611         |
-| Python   | 4330         |
-| Tableau  | 3745         |
-| Power BI | 2609         |
-
-*Table of the demand for the top 5 skills in data analyst job postings*
+![In-Demand Skills](/sql_project/results/3_jobs_top_skills_all.png)
+*Bar charts visualizing the count of the five most required skills for the available data analyst and business analyst roles in France and Canada.*
 
 ### 4. Skills Based on Salary
-Exploring the average salaries associated with different skills revealed which skills are the highest paying.
+This query helped identify the five most financially rewarding skills for data analyst and business analyst roles in France and Canada.
+
+This revealed how different skills impact salary levels for data analysts and business analysts. Moreover, it helped identifying the most financially rewarding skills to acquire or improve.
 ```sql
-SELECT 
-    skills,
-    ROUND(AVG(salary_year_avg), 0) AS avg_salary
-FROM job_postings_fact
-INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
-INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+SELECT
+    skills_dim.skills,
+    ROUND(AVG(job_postings_fact.salary_year_avg), 0) AS salary_avg
+FROM
+    job_postings_fact
+INNER JOIN skills_job_dim
+    ON job_postings_fact.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim
+    ON skills_job_dim.skill_id = skills_dim.skill_id
 WHERE
-    job_title_short = 'Data Analyst'
-    AND salary_year_avg IS NOT NULL
-    AND job_work_from_home = True 
+    job_postings_fact.job_title_short IN ('Data Analyst', 'Business Analyst')
+    AND
+    (job_postings_fact.job_location LIKE '%France%'
+    OR
+    job_postings_fact.job_location LIKE '%Canada%')
+    AND
+    job_postings_fact.salary_year_avg IS NOT NULL
 GROUP BY
-    skills
+    skills_dim.skills
 ORDER BY
-    avg_salary DESC
-LIMIT 25;
+    salary_avg DESC
+LIMIT
+    5;
 ```
 Here's a breakdown of the results for top paying skills for Data Analysts:
 - **High Demand for Big Data & ML Skills:** Top salaries are commanded by analysts skilled in big data technologies (PySpark, Couchbase), machine learning tools (DataRobot, Jupyter), and Python libraries (Pandas, NumPy), reflecting the industry's high valuation of data processing and predictive modeling capabilities.
