@@ -178,27 +178,55 @@ ORDER BY
 LIMIT
     5;
 ```
-Here's a breakdown of the results for top paying skills for Data Analysts:
-- **High Demand for Big Data & ML Skills:** Top salaries are commanded by analysts skilled in big data technologies (PySpark, Couchbase), machine learning tools (DataRobot, Jupyter), and Python libraries (Pandas, NumPy), reflecting the industry's high valuation of data processing and predictive modeling capabilities.
-- **Software Development & Deployment Proficiency:** Knowledge in development and deployment tools (GitLab, Kubernetes, Airflow) indicates a lucrative crossover between data analysis and engineering, with a premium on skills that facilitate automation and efficient data pipeline management.
-- **Cloud Computing Expertise:** Familiarity with cloud and data engineering tools (Elasticsearch, Databricks, GCP) underscores the growing importance of cloud-based analytics environments, suggesting that cloud proficiency significantly boosts earning potential in data analytics.
+Here's a breakdown of the results for top paying skills for data analyst and business analyst roles in France and Canada:
+- Looking at the big picture, top salaries are driven by **DevOps/infrastructure responsibilities** (**GitLab**, **Terraform**) and **engineering skills** (**Kafka**, **C#**); expertise in low-level, high-performance programming languages such as **C** is also highly rewarded;
+- **Business Analyst**: proficiency in data engineering and/or **cloud tools** (**Cassandra**, **AWS**) and **backend/system-level** programming languages (**Go**) similarly benefits business analysts' salary;
+- **Data Analyst (France)**: top-paying data analyst roles in France show a strong **DevOps/infrastructure** component (**GitLab**, **Terraform**, **Docker**);
+- **Data Analyst (France)**: top-paying data analyst roles in Canada require a combination of **full-stack/development** skills (**TypeScript**, **JavaScript**) and **big data / cloud analytics** expertise (**Spark**, **Hadoop**, **BigQuery**);
+- Ultimately, highest-paying opportunities seems to address **hybrid technical profiles**, combining data analysis with **software engineering** and **DevOps/infrastructure** expertise.
 
 | Skills        | Average Salary ($) |
 |---------------|-------------------:|
-| pyspark       |            208,172 |
-| bitbucket     |            189,155 |
-| couchbase     |            160,515 |
-| watson        |            160,515 |
-| datarobot     |            155,486 |
-| gitlab        |            154,500 |
-| swift         |            153,750 |
-| jupyter       |            152,777 |
-| pandas        |            151,821 |
-| elasticsearch |            145,000 |
+| gitlab        |            163,782 |
+| terraform     |            163,782 |
+| c             |            131,500 |
+| kafka         |            111,216 |
+| c#            |            111,202 |
 
-*Table of the average salary for the top 10 paying skills for data analysts*
+*Average salary for the top 5 paying skills for data analyst and business analyst roles in France and Canada.*
+
+| Skills        | Average Salary ($) |
+|---------------|-------------------:|
+| pandas        |            111,175 |
+| cassandra     |            111,175 |
+| aws           |            111,175 |
+| go            |            111,175 |
+| kafka         |            100,138 |
+
+*Average salary for the top 5 paying skills for business analyst roles in France and Canada.*
+
+| Skills        | Average Salary ($) |
+|---------------|-------------------:|
+| c             |            200,000 |
+| gitlab        |            163,782 |
+| terraform     |            163,782 |
+| kafka         |            118,602 |
+| docker        |            113,994 |
+
+*Average salary for the top 5 paying skills for data analyst roles in France.*
+
+| Skills        | Average Salary ($) |
+|---------------|-------------------:|
+| typescript    |            108,416 |
+| spark         |            107,479 |
+| hadoop        |            107,167 |
+| javascript    |            101,750 |
+| bigquery      |            101,750 |
+
+*Average salary for the top 5 paying skills for data analyst roles in Canada.*
 
 ### 5. Most Optimal Skills to Learn
+
 
 Combining insights from demand and salary data, this query aimed to pinpoint skills that are both in high demand and have high salaries, offering a strategic focus for skill development.
 
