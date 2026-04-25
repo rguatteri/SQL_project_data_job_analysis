@@ -37,7 +37,7 @@ INNER JOIN skills_job_dim
 INNER JOIN skills_dim
     ON skills_job_dim.skill_id = skills_dim.skill_id
 ORDER BY
-    salary_year_avg
+    salary_year_avg;
 
 /*
 For the data set I analyzed, this query returns 318 entries - one for each skill mentioned in each job posting.

@@ -26,7 +26,7 @@ WHERE
     AND
     job_postings_fact.salary_year_avg IS NOT NULL
 ORDER BY
-    job_postings_fact.salary_year_avg
+    job_postings_fact.salary_year_avg;
 
 /*
 In the data set I analyzed, there seems to be 84 job postings for data analyst and business analyst roles in France and Canada with specified salaries.
