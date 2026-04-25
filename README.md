@@ -226,73 +226,118 @@ Here's a breakdown of the results for top paying skills for data analyst and bus
 *Average salary for the top 5 paying skills for data analyst roles in Canada.*
 
 ### 5. Most Optimal Skills to Learn
+Combining insights from demand and salary data, this query aimed to pinpoint skills that are both in high demand and high-paying.
 
-
-Combining insights from demand and salary data, this query aimed to pinpoint skills that are both in high demand and have high salaries, offering a strategic focus for skill development.
+This revealed which target skills offer job security (high demand) and financial benefits (high salaries). Ultimately, this provides strategic insights for career development in data analyst and business analyst positions.
 
 ```sql
-SELECT 
+SELECT
     skills_dim.skill_id,
     skills_dim.skills,
     COUNT(skills_job_dim.job_id) AS demand_count,
-    ROUND(AVG(job_postings_fact.salary_year_avg), 0) AS avg_salary
-FROM job_postings_fact
-INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
-INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+    ROUND(AVG(job_postings_fact.salary_year_avg), 0) AS salary_avg
+FROM
+    job_postings_fact
+INNER JOIN skills_job_dim
+    ON job_postings_fact.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim
+    ON skills_job_dim.skill_id = skills_dim.skill_id
 WHERE
-    job_title_short = 'Data Analyst'
-    AND salary_year_avg IS NOT NULL
-    AND job_work_from_home = True 
+    job_postings_fact.job_title_short IN ('Data Analyst', 'Business Analyst')
+    AND
+    (job_postings_fact.job_location LIKE '%France%'
+    OR
+    job_postings_fact.job_location LIKE '%Canada%')
+    AND
+    job_postings_fact.salary_year_avg IS NOT NULL
 GROUP BY
     skills_dim.skill_id
 HAVING
-    COUNT(skills_job_dim.job_id) > 10
+    COUNT(skills_job_dim.job_id) >= 10
 ORDER BY
-    avg_salary DESC,
+    salary_avg DESC,
     demand_count DESC
-LIMIT 25;
+LIMIT
+    10;
 ```
+
+Here's a breakdown of the most optimal skills for data analyst and business analyst roles in France and Canada:
+- Looking at the big picture, there is a *core stack* dominating both demand and salary: **SQL**, **Python**, **Tableau**, and **Excel** are the most reliable, high-demand, and high-paying skills; **cloud and big data** skills (**Spark** and **Azure**) lead to higher salaries in spite of their demand being lower than core **BI tools** (**Tableau**, **Power BI**);
+- **Business Analyst**: **Python** is the only skills balancing demand and salary, with higher salaries coming from technical and niche tools (**Cassandra**, **AWS**, **Kafka**, **Go**); however, these findings might be inconclusive due to the extremely small sample size;
+- **Data Analyst**: **SQL**, **Python**, and **Tableau** balance demand and salary both in France and Canada, with the latter showing an almost even salary distribution across these core tools (Tableau ~92k, Python ~92k, SQL ~89k); additionally, **Azure** seems to add a salary boost in France.
+
+> **N.B.** Only skills featured in at least 10 job postings were retained, apart from business analyst roles, as there were only six job postings for this role in the analyzed data set.
 
 | Skill ID | Skills     | Demand Count | Average Salary ($) |
 |----------|------------|--------------|-------------------:|
-| 8        | go         | 27           |            115,320 |
-| 234      | confluence | 11           |            114,210 |
-| 97       | hadoop     | 22           |            113,193 |
-| 80       | snowflake  | 37           |            112,948 |
-| 74       | azure      | 34           |            111,225 |
-| 77       | bigquery   | 13           |            109,654 |
-| 76       | aws        | 32           |            108,317 |
-| 4        | java       | 17           |            106,906 |
-| 194      | ssis       | 12           |            106,683 |
-| 233      | jira       | 20           |            104,918 |
+| 92       | spark      | 10           |             98,902 |
+| 1        | python     | 37           |             94,045 |
+| 74       | azure      | 12           |             87,664 |
+| 0        | sql        | 48           |             85,175 |
+| 181      | excel      | 17           |             84,523 |
+| 182      | tableau    | 28           |             80,921 |
+| 183      | power bi   | 14           |             79,083 |
 
-*Table of the most optimal skills for data analyst sorted by salary*
+*Most optimal skills for data analyst and business analyst roles in France and Canada. Results are sorted by decreasing average salary.*
 
-Here's a breakdown of the most optimal skills for Data Analysts in 2023: 
-- **High-Demand Programming Languages:** Python and R stand out for their high demand, with demand counts of 236 and 148 respectively. Despite their high demand, their average salaries are around $101,397 for Python and $100,499 for R, indicating that proficiency in these languages is highly valued but also widely available.
-- **Cloud Tools and Technologies:** Skills in specialized technologies such as Snowflake, Azure, AWS, and BigQuery show significant demand with relatively high average salaries, pointing towards the growing importance of cloud platforms and big data technologies in data analysis.
-- **Business Intelligence and Visualization Tools:** Tableau and Looker, with demand counts of 230 and 49 respectively, and average salaries around $99,288 and $103,795, highlight the critical role of data visualization and business intelligence in deriving actionable insights from data.
-- **Database Technologies:** The demand for skills in traditional and NoSQL databases (Oracle, SQL Server, NoSQL) with average salaries ranging from $97,786 to $104,534, reflects the enduring need for data storage, retrieval, and management expertise.
+| Skill ID | Skills     | Demand Count | Average Salary ($) |
+|----------|------------|--------------|-------------------:|
+| 63       | cassandra  | 1            |            111,175 |
+| 76       | aws        | 1            |            111,175 |
+| 93       | pandas     | 1            |            111,175 |
+| 8        | go         | 1            |            111,175 |
+| 98       | kafka      | 2            |            100,138 |
+| 1        | python     | 3            |             96,758 |
+| 4        | java       | 1            |             90,000 |
+| 105      | gdpr       | 1            |             90,000 |
+| 124      | selenium   | 1            |             90,000 |
+| 215      | flow       | 1            |             90,000 |
+
+*Most optimal skills for business analyst roles in France and Canada. Results are sorted by decreasing average salary.*
+
+| Skill ID | Skills     | Demand Count | Average Salary ($) |
+|----------|------------|--------------|-------------------:|
+| 1        | python     | 20           |             94,724 |
+| 74       | azure      | 10           |             86,095 |
+| 0        | sql        | 28           |             83,666 |
+| 182      | tableau    | 19           |             75,403 |
+
+*Most optimal skills for data analyst roles in France. Results are sorted by decreasing average salary.*
+
+| Skill ID | Skills     | Demand Count | Average Salary ($) |
+|----------|------------|--------------|-------------------:|
+| 182      | tableau    | 9            |             92,572 |
+| 1        | python     | 14           |             92,494 |
+| 0        | sql        | 16           |             89,285 |
+| 181      | excel      | 9            |             83,563 |
+
+*Most optimal skills for data analyst roles in Canada. Results are sorted by decreasing average salary.*
+
+Ultimately, the most optimal profiles combine a broad base of core tools (SQL, Python, BI tools) with cloud or big data specializations:
+- **Python** is the skill that best balances high demand and high salary;
+- **SQL** represents an essential baseline;
+- **Business intelligence tools** (**Tableau**, **Power BI**) are required for employability;
+- An advanced skill (**Spark** or **Azure**) adds salary leverage.
 
 # What I Learned
 
-Throughout this adventure, I've turbocharged my SQL toolkit with some serious firepower:
+Throughout this analysis, I've mastered SQL basics via:
 
-- **🧩 Complex Query Crafting:** Mastered the art of advanced SQL, merging tables like a pro and wielding WITH clauses for ninja-level temp table maneuvers.
-- **📊 Data Aggregation:** Got cozy with GROUP BY and turned aggregate functions like COUNT() and AVG() into my data-summarizing sidekicks.
-- **💡 Analytical Wizardry:** Leveled up my real-world puzzle-solving skills, turning questions into actionable, insightful SQL queries.
+- **🧩 Complex Query Crafting:** mastered the art of advanced SQL, merging tables and wielding WITH clauses;
+- **📊 Data Aggregation:** used GROUP BY and turned aggregate functions like COUNT() and AVG() into my data-summarizing sidekicks;
+- **💡 Analytical Wizardry:** leveled up my real-world puzzle-solving skills, turning questions into actionable, insightful SQL queries.
 
 # Conclusions
 
 ### Insights
 From the analysis, several general insights emerged:
 
-1. **Top-Paying Data Analyst Jobs**: The highest-paying jobs for data analysts that allow remote work offer a wide range of salaries, the highest at $650,000!
-2. **Skills for Top-Paying Jobs**: High-paying data analyst jobs require advanced proficiency in SQL, suggesting it’s a critical skill for earning a top salary.
-3. **Most In-Demand Skills**: SQL is also the most demanded skill in the data analyst job market, thus making it essential for job seekers.
-4. **Skills with Higher Salaries**: Specialized skills, such as SVN and Solidity, are associated with the highest average salaries, indicating a premium on niche expertise.
+1. **Top-Paying Data Analyst and Business Analyst Jobs**: the highest-paying jobs for data analysts and business analysts in France and Canada offer a wide range of salaries;
+2. **Skills for Top-Paying Jobs**: high-paying data analyst jobs require advanced proficiency in SQL, suggesting it’s a critical skill for earning a top salary;
+3. **Most In-Demand Skills**: SQL is also the most demanded skill in the data analyst job market, thus making it essential for job seekers;
+4. **Skills with Higher Salaries**: specialized skills are associated with the highest average salaries, indicating a premium on niche expertise;
 5. **Optimal Skills for Job Market Value**: SQL leads in demand and offers for a high average salary, positioning it as one of the most optimal skills for data analysts to learn to maximize their market value.
 
 ### Closing Thoughts
 
-This project enhanced my SQL skills and provided valuable insights into the data analyst job market. The findings from the analysis serve as a guide to prioritizing skill development and job search efforts. Aspiring data analysts can better position themselves in a competitive job market by focusing on high-demand, high-salary skills. This exploration highlights the importance of continuous learning and adaptation to emerging trends in the field of data analytics.
+This project enhanced my SQL skills and provided valuable insights into the data analyst and business analyst job markets in France and Canada. The findings from the analysis serve as a guide to prioritizing skill development and job search efforts. Aspiring data analysts can better position themselves in a competitive job market by focusing on high-demand, high-salary skills. This exploration highlights the importance of continuous learning and adaptation to emerging trends in the field of data analytics.
