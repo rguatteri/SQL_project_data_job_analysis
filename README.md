@@ -1,94 +1,106 @@
-TODO: modify  this later
-
 # Introduction
-📊 Dive into the data job market! Focusing on data analyst roles, this project explores 💰 top-paying jobs, 🔥 in-demand skills, and 📈 where high demand meets high salary in data analytics.
+📊 Let's dive into the data job market! Focusing on data analyst and business analyst job postings in France 🇫🇷 and Canada 🇨🇦, this project explores:
+- 💰 Top-paying jobs;
+- 🔥 In-demand skills;
+- 📈 Where high demand meets high salary.
 
-🔍 SQL queries? Check them out here: [project_sql folder](/project_sql/)
+🔍 I conducted this analysis via SQL. You can check the queries I produced here: [sql_project](/sql_project/).
 
 # Background
-Driven by a quest to navigate the data analyst job market more effectively, this project was born from a desire to pinpoint top-paid and in-demand skills, streamlining others work to find optimal jobs.
+As a current job seeker in the data analyst and business analyst job market, this project pinpoints top-paid and in-demand skills, possibly streamlining others' work to find optimal jobs.
 
-Data hails from my [SQL Course](https://lukebarousse.com/sql). It's packed with insights on job titles, salaries, locations, and essential skills.
+Data hails from Luke Barousse's [SQL Course](https://lukebarousse.com/sql). It's packed with insights on over **30,000 job postings**, including job titles, salaries, locations, and essential skills.
 
 ### The questions I wanted to answer through my SQL queries were:
 
-1. What are the top-paying data analyst jobs?
-2. What skills are required for these top-paying jobs?
-3. What skills are most in demand for data analysts?
+1. What are the available data analyst and business analyst job opportunities in France and Canada?
+2. What skills are required for these roles?
+3. What skills are most in demand for data analysts and business analysts?
 4. Which skills are associated with higher salaries?
 5. What are the most optimal skills to learn?
 
 # Tools I Used
 For my deep dive into the data analyst job market, I harnessed the power of several key tools:
 
-- **SQL:** The backbone of my analysis, allowing me to query the database and unearth critical insights.
-- **PostgreSQL:** The chosen database management system, ideal for handling the job posting data.
-- **Visual Studio Code:** My go-to for database management and executing SQL queries.
-- **Git & GitHub:** Essential for version control and sharing my SQL scripts and analysis, ensuring collaboration and project tracking.
+- **SQL:** the backbone of my analysis, allowing me to query the database and unearth critical insights;
+- **PostgreSQL:** the chosen database management system, ideal for handling job posting data;
+- **Visual Studio Code:** my go-to for database management and executing SQL queries;
+- **Git & GitHub:** essential for version control and sharing my SQL scripts and analysis, ensuring collaboration and project tracking.
 
 # The Analysis
-Each query for this project aimed at investigating specific aspects of the data analyst job market. Here’s how I approached each question:
+Each query for this project aimed at investigating specific aspects of the data analyst and business analyst job market. Here’s how I approached each question.
 
-### 1. Top Paying Data Analyst Jobs
-To identify the highest-paying roles, I filtered data analyst positions by average yearly salary and location, focusing on remote jobs. This query highlights the high paying opportunities in the field.
-
+### 1. Available Data Analyst and Business Analyst Jobs
+To identify the available roles, I filtered data analyst and business analyst positions by average yearly salary and location, focusing on job postings from France and Canada. This query highlights the available opportunities in the field.
 ```sql
-SELECT	
-	job_id,
-	job_title,
-	job_location,
-	job_schedule_type,
-	salary_year_avg,
-	job_posted_date,
-    name AS company_name
+SELECT
+    job_postings_fact.job_id,
+    job_postings_fact.job_title,
+    job_postings_fact.job_location,
+    job_postings_fact.job_schedule_type,
+    job_postings_fact.salary_year_avg,
+    job_postings_fact.job_posted_date,
+    company_dim.name AS company_name
 FROM
     job_postings_fact
-LEFT JOIN company_dim ON job_postings_fact.company_id = company_dim.company_id
+LEFT JOIN company_dim
+    ON job_postings_fact.company_id = company_dim.company_id
 WHERE
-    job_title_short = 'Data Analyst' AND 
-    job_location = 'Anywhere' AND 
-    salary_year_avg IS NOT NULL
+    job_postings_fact.job_title_short IN ('Data Analyst', 'Business Analyst')
+    AND
+    (job_postings_fact.job_location LIKE '%France%'
+    OR
+    job_postings_fact.job_location LIKE '%Canada%')
+    AND
+    job_postings_fact.salary_year_avg IS NOT NULL
 ORDER BY
-    salary_year_avg DESC
-LIMIT 10;
+    job_postings_fact.salary_year_avg;
 ```
-Here's the breakdown of the top data analyst jobs in 2023:
-- **Wide Salary Range:** Top 10 paying data analyst roles span from $184,000 to $650,000, indicating significant salary potential in the field.
-- **Diverse Employers:** Companies like SmartAsset, Meta, and AT&T are among those offering high salaries, showing a broad interest across different industries.
-- **Job Title Variety:** There's a high diversity in job titles, from Data Analyst to Director of Analytics, reflecting varied roles and specializations within data analytics.
+Here's the breakdown of the available data analyst and business analyst job opportunities:
+- In the data set I analyzed, there seems to be **84 job postings** for data analyst and business analyst roles in France and Canada with specified salaries;
+- Specifically, there seems to be **51** and **27** job postings for **data analyst** roles in France and Canada, respectively;
+- Conversely, there seems to be just **3** job postings for **business analyst** roles both in France and Canada.
 
-![Top Paying Roles](assets/1_top_paying_roles.png)
-*Bar graph visualizing the salary for the top 10 salaries for data analysts; ChatGPT generated this graph from my SQL query results*
+Role-specific and location-specific insights were obtained by filtering for a single role and/or location in the WHERE clause. 
 
-### 2. Skills for Top Paying Jobs
-To understand what skills are required for the top-paying jobs, I joined the job postings with the skills data, providing insights into what employers value for high-compensation roles.
+**N.B.** Removing the 'job_postings_fact.salary_year_avg IS NOT NULL' filter from the WHERE clause returns over **16800** such job postings (!).
+
+### 2. Skills for Available Jobs
+To understand what skills are required for the available data analyst and business analyst roles in France and Canada, I joined the job postings with the skills data, providing insights into which skills are required for these roles and worth developing.
 ```sql
-WITH top_paying_jobs AS (
-    SELECT	
-        job_id,
-        job_title,
-        salary_year_avg,
-        name AS company_name
+WITH available_jobs AS (
+    SELECT
+        job_postings_fact.job_id,
+        job_postings_fact.job_title,
+        job_postings_fact.salary_year_avg,
+        company_dim.name AS company_name
     FROM
         job_postings_fact
-    LEFT JOIN company_dim ON job_postings_fact.company_id = company_dim.company_id
+    LEFT JOIN company_dim
+        ON job_postings_fact.company_id = company_dim.company_id
     WHERE
-        job_title_short = 'Data Analyst' AND 
-        job_location = 'Anywhere' AND 
-        salary_year_avg IS NOT NULL
+        job_postings_fact.job_title_short IN ('Data Analyst', 'Business Analyst')
+        AND
+        (job_postings_fact.job_location LIKE '%France%'
+        OR
+        job_postings_fact.job_location LIKE '%Canada%')
+        AND
+        job_postings_fact.salary_year_avg IS NOT NULL
     ORDER BY
-        salary_year_avg DESC
-    LIMIT 10
+        job_postings_fact.salary_year_avg
 )
 
-SELECT 
-    top_paying_jobs.*,
-    skills
-FROM top_paying_jobs
-INNER JOIN skills_job_dim ON top_paying_jobs.job_id = skills_job_dim.job_id
-INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+SELECT
+    available_jobs.*,
+    skills_dim.skills
+FROM
+    available_jobs
+INNER JOIN skills_job_dim
+    ON available_jobs.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim
+    ON skills_job_dim.skill_id = skills_dim.skill_id
 ORDER BY
-    salary_year_avg DESC;
+    salary_year_avg;
 ```
 Here's the breakdown of the most demanded skills for the top 10 highest paying data analyst jobs in 2023:
 - **SQL** is leading with a bold count of 8.
@@ -97,7 +109,7 @@ Here's the breakdown of the most demanded skills for the top 10 highest paying d
 Other skills like **R**, **Snowflake**, **Pandas**, and **Excel** show varying degrees of demand.
 
 ![Top Paying Skills](assets/2_top_paying_roles_skills.png)
-*Bar graph visualizing the count of skills for the top 10 paying jobs for data analysts; ChatGPT generated this graph from my SQL query results*
+*Bar charts visualizing the count of skills for the available data analyst and business analyst roles in France and Canada.*
 
 ### 3. In-Demand Skills for Data Analysts
 
