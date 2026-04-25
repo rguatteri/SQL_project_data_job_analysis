@@ -63,7 +63,7 @@ Here's the breakdown of the available data analyst and business analyst job oppo
 
 Role-specific and location-specific insights were obtained by filtering for a single role and/or location in the WHERE clause. 
 
-**N.B.** Removing the 'job_postings_fact.salary_year_avg IS NOT NULL' filter from the WHERE clause returns over **16800** such job postings (!).
+> **N.B.** Removing the 'job_postings_fact.salary_year_avg IS NOT NULL' filter from the WHERE clause returns over **16800** such job postings (!).
 
 ### 2. Skills for Available Jobs
 To understand what skills are required for the available data analyst and business analyst roles in France and Canada, I joined the job postings with the skills data, providing insights into which skills are required for these roles and worth developing.
@@ -102,34 +102,44 @@ INNER JOIN skills_dim
 ORDER BY
     salary_year_avg;
 ```
-Here's the breakdown of the most demanded skills for the top 10 highest paying data analyst jobs in 2023:
-- **SQL** is leading with a bold count of 8.
-- **Python** follows closely with a bold count of 7.
-- **Tableau** is also highly sought after, with a bold count of 6.
-Other skills like **R**, **Snowflake**, **Pandas**, and **Excel** show varying degrees of demand.
+> **N.B.** For the data set I analyzed, this query returns 318 entries - one for each skill mentioned in each job posting - as job postings are likely to list multiple skills. Moreover - after closely looking at the job_id column - this query only returns 77 out of the 84 job postings retrieved via '01_available_jobs.sql', as those 7 left-out job postings arguably list no skills.
 
-![Top Paying Skills](assets/2_top_paying_roles_skills.png)
-*Bar charts visualizing the count of skills for the available data analyst and business analyst roles in France and Canada.*
+Here's the breakdown of the most required skills from job postings with specified salaries for data analyst and business analyst roles in France and Canada:
+- **SQL** is leading across all scenarios; 
+- **Python** closely follows;
+- **Tableau** is also highly sought after.
+Other skills like **Excel**, **PowerBI**, **SAS**, **Azure**, and **Spark** show varying degrees of demand.
 
-### 3. In-Demand Skills for Data Analysts
+![Required Skills](/sql_project/results/2_available_jobs_skills.png)
+*Bar charts visualizing the count of the 10 most required skills for the available data analyst and business analyst roles in France and Canada. Due to the limited amount of job postings for business analyst roles with specified salaries, only the four most required skills are showed.*
 
-This query helped identify the skills most frequently requested in job postings, directing focus to areas with high demand.
+### 3. In-Demand Skills
+This query helped identify the five most frequently skills requested in job postings for data analyst and business analyst roles in France and Canada, **irrespective of whether the salary is specified**.
+
+> **N.B.** Since this query does NOT focus on the salary, the 'job_postings_fact.salary_year_avg IS NOT NULL' filter is omitted from the WHERE clause.
 
 ```sql
-SELECT 
-    skills,
+SELECT
+    skills_dim.skills,
     COUNT(skills_job_dim.job_id) AS demand_count
-FROM job_postings_fact
-INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
-INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+FROM
+    job_postings_fact
+INNER JOIN skills_job_dim
+    ON job_postings_fact.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim
+    ON skills_job_dim.skill_id = skills_dim.skill_id
 WHERE
-    job_title_short = 'Data Analyst' 
-    AND job_work_from_home = True 
+    job_postings_fact.job_title_short IN ('Data Analyst', 'Business Analyst')
+    AND
+    (job_postings_fact.job_location LIKE '%France%'
+    OR
+    job_postings_fact.job_location LIKE '%Canada%')
 GROUP BY
-    skills
+    skills_dim.skills
 ORDER BY
     demand_count DESC
-LIMIT 5;
+LIMIT
+    5;
 ```
 Here's the breakdown of the most demanded skills for data analysts in 2023
 - **SQL** and **Excel** remain fundamental, emphasizing the need for strong foundational skills in data processing and spreadsheet manipulation.
