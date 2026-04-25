@@ -34,4 +34,4 @@ ORDER BY
     salary_avg DESC,
     demand_count DESC
 LIMIT
-    10
+    10;
