@@ -105,9 +105,9 @@ ORDER BY
 > **N.B.** For the data set I analyzed, this query returns 318 entries - one for each skill mentioned in each job posting - as job postings are likely to list multiple skills. Moreover - after closely looking at the job_id column - this query only returns 77 out of the 84 job postings retrieved via '01_available_jobs.sql', as those 7 left-out job postings arguably list no skills.
 
 Here's the breakdown of the most required skills from job postings with specified salaries for data analyst and business analyst roles in France and Canada:
-- **SQL** is leading across all scenarios; 
-- **Python** closely follows;
-- **Tableau** is also highly sought after.
+- **SQL** is leading by a clear margin across all scenarios, making it the foundational skill both for data analysts and business analysts; 
+- **Python** closely follows, implying a strong demand for data manipulation and automation;
+- **Tableau** is also highly sought after, emphasizing data visualization and reporting.
 
 Other skills like **Excel**, **PowerBI**, **SAS**, **Azure**, and **Spark** show varying degrees of demand.
 
@@ -182,8 +182,9 @@ Here's a breakdown of the results for top paying skills for data analyst and bus
 - Looking at the big picture, top salaries are driven by **DevOps/infrastructure responsibilities** (**GitLab**, **Terraform**) and **engineering skills** (**Kafka**, **C#**); expertise in low-level, high-performance programming languages such as **C** is also highly rewarded;
 - **Business Analyst**: proficiency in data engineering and/or **cloud tools** (**Cassandra**, **AWS**) and **backend/system-level** programming languages (**Go**) similarly benefits business analysts' salary;
 - **Data Analyst (France)**: top-paying data analyst roles in France show a strong **DevOps/infrastructure** component (**GitLab**, **Terraform**, **Docker**);
-- **Data Analyst (France)**: top-paying data analyst roles in Canada require a combination of **full-stack/development** skills (**TypeScript**, **JavaScript**) and **big data / cloud analytics** expertise (**Spark**, **Hadoop**, **BigQuery**);
-- Ultimately, highest-paying opportunities seems to address **hybrid technical profiles**, combining data analysis with **software engineering** and **DevOps/infrastructure** expertise.
+- **Data Analyst (France)**: top-paying data analyst roles in Canada require a combination of **full-stack/development** skills (**TypeScript**, **JavaScript**) and **big data / cloud analytics** expertise (**Spark**, **Hadoop**, **BigQuery**).
+
+Ultimately, highest-paying opportunities seems to address **hybrid technical profiles**, combining data analysis with **software engineering** and **DevOps/infrastructure** expertise. In other words, pure analytical skills are necessary, yet not sufficient to achieve top salaries, which come from **building systems** instead of just analyzing data.
 
 | Skills        | Average Salary ($) |
 |---------------|-------------------:|
